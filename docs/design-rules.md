@@ -20,17 +20,26 @@ beliefs behind them, see [principles](principles.md).
   Narrative is markdown. ([0005](decisions/0005-json-and-json-schema.md))
 - Fields that must never change are `readOnly` in their schema, and the
   build rejects changes to them. ([0005](decisions/0005-json-and-json-schema.md))
-- One record per file, named by its ID, in `nodes/` or `edges/`.
-  ([0006](decisions/0006-one-file-per-record.md))
+- Curated records use record schemas; extraction output uses proposal
+  schemas in `schemas/proposals/`, which have no IDs or trust fields.
+  ([0020](decisions/0020-proposal-and-record-schemas.md))
+- One curated record per file, named by its ID, in `nodes/` or `edges/`.
+  ([0006](decisions/0006-one-file-per-record.md)) One extraction run per
+  file in `data/extracted/runs/`.
+  ([0022](decisions/0022-one-file-per-extraction-run.md))
 - Every record validates against its type schema; unknown fields are
   rejected. Nodes carry a read-only `type` matching their ID prefix.
   ([0016](decisions/0016-schema-conventions.md))
 - Every node and edge has `origin`, `verification`, `states` and
   `provenance`. ([0009](decisions/0009-provenance-and-staleness.md),
-  [0010](decisions/0010-origin-and-verification.md),
-  [0014](decisions/0014-architecture-states.md))
+  [0019](decisions/0019-origin-with-asserted-facts.md),
+  [0018](decisions/0018-current-means-known-to-exist.md))
+- `origin` is `documented`, `observed`, `asserted` or `synthetic`.
+  Documented and observed records cite sources; asserted records may.
+  ([0019](decisions/0019-origin-with-asserted-facts.md))
 - `states` is a non-empty list of `current` and `target`, or `past` on
-  its own. ([0014](decisions/0014-architecture-states.md))
+  its own. `["current"]` means known to exist now, with target state not
+  asserted. ([0018](decisions/0018-current-means-known-to-exist.md))
 
 ## IDs
 
@@ -38,8 +47,9 @@ beliefs behind them, see [principles](principles.md).
   hyphens. ([0007](decisions/0007-readable-permanent-ids.md))
 - IDs are created once, never changed and never reused. Merged records
   become tombstones. ([0007](decisions/0007-readable-permanent-ids.md))
-- Pipelines never create IDs. Uncertain matches go to the curator.
-  ([0008](decisions/0008-entity-resolution-tiers.md))
+- Pipelines never create IDs. An extracted ID links automatically only
+  when its name agrees; uncertain matches go to the curator.
+  ([0021](decisions/0021-name-agreement-before-linking.md))
 
 ## Edges
 

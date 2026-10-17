@@ -1,6 +1,6 @@
 # 0008. Match extracted entities to existing records in tiers
 
-- **Status:** Accepted
+- **Status:** Superseded by [0021](0021-name-agreement-before-linking.md)
 - **Date:** 2026-10-17
 
 ## Context

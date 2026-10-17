@@ -19,7 +19,7 @@ flowchart LR
 |---|---|---|---|
 | `raw/` | Sources + manifests, add-only | Curator | No |
 | `converted/` | Markdown from sources | Conversion pipelines | Yes |
-| `extracted/` | Proposed entities, edges and matches | Extraction (unattended or in a session) | Re-runnable; runs are kept |
+| `extracted/` | Proposed entities, edges and matches, one file per run | Extraction (unattended or in a session) | Re-runnable; runs are kept |
 | `curated/` | Accepted nodes, edges and narrative | Directed sessions only | No |
 | `published/` | Combined output for consumers | The build | Yes |
 
@@ -34,9 +34,9 @@ Nodes and edges are JSON files named by ID, one record per file, in
 | `type` | ✓ | ✓ | Read-only. On nodes, matches the ID prefix |
 | `from`, `to` | | ✓ | Read-only |
 | `name`, `aliases` | ✓ | | Display name may change; aliases drive matching |
-| `origin` | ✓ | ✓ | `documented`, `observed`, `synthetic` |
+| `origin` | ✓ | ✓ | `documented`, `observed`, `asserted`, `synthetic` |
 | `verification` | ✓ | ✓ | `unverified`, `verified` |
-| `states` | ✓ | ✓ | `current`, `target`, `past` |
+| `states` | ✓ | ✓ | `current` (known to exist now), `target`, `past` |
 | `basis` | | ✓ | `stated`, `inferred` |
 | `provenance` | ✓ | ✓ | Sources + hashes, extraction run, timestamps |
 | `tags` | optional | optional | Lowercase kebab-case |
@@ -44,15 +44,18 @@ Nodes and edges are JSON files named by ID, one record per file, in
 
 Every record validates against the schema for its type in `schemas/`;
 unknown fields are rejected ([0016](decisions/0016-schema-conventions.md)).
+Extraction output uses the parallel proposal schemas in
+`schemas/proposals/`, which have no IDs or trust fields
+([0020](decisions/0020-proposal-and-record-schemas.md)).
 
 Merged records become tombstones (`mergedInto`), which keep their IDs
 reserved. Narrative markdown is linked to records by ID.
 
 ## Matching
 
-Extracted entities are matched to curated records in tiers: exact ID,
-exact alias, candidate match for review, or proposed new entity.
-Pipelines never create IDs.
+Extracted entities are matched to curated records in tiers: an existing
+ID whose name agrees, exact alias, candidate match for review, or
+proposed new entity. Pipelines never create IDs.
 
 ## Change detection
 

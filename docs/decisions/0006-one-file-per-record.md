@@ -1,6 +1,6 @@
 # 0006. One file per record
 
-- **Status:** Accepted
+- **Status:** Accepted, partly superseded by [0022](0022-one-file-per-extraction-run.md)
 - **Date:** 2026-10-17
 
 ## Context

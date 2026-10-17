@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:proposal:edge",
+  "title": "Proposed edge (abstract base)",
+  "type": "object",
+  "properties": {
+    "type": { "$ref": "urn:graphea:schema:common#/$defs/slug" },
+    "from": { "type": "string", "minLength": 1 },
+    "to": { "type": "string", "minLength": 1 },
+    "basis": { "enum": ["stated", "inferred"] },
+    "states": { "$ref": "urn:graphea:schema:common#/$defs/states" },
+    "tags": { "$ref": "urn:graphea:schema:common#/$defs/tags" }
+  },
+  "required": ["type", "from", "to", "basis", "states"]
+}

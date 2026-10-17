@@ -1,6 +1,6 @@
 # 0010. Record origin and verification on every record
 
-- **Status:** Accepted
+- **Status:** Superseded by [0019](0019-origin-with-asserted-facts.md)
 - **Date:** 2026-10-17
 
 ## Context

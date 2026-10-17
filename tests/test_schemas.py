@@ -103,3 +103,104 @@ def test_related_to_edge(validator_for, record_valid, record):
 def test_abstract_edge_base_is_open(validator_for):
     """Bases stay open so type schemas can add fields (ADR-0016)."""
     assert validator_for(EDGE).is_valid(edit(anything=1))
+
+
+@pytest.mark.parametrize("sources", [[], SOURCE], ids=["no sources", "with sources"])
+def test_asserted_origin_sources_optional(validator_for, sources):
+    """Asserted facts may cite sources but don't have to (ADR-0019)."""
+    record = edit(origin="asserted", provenance__sources=sources)
+    assert validator_for(RELATED_TO).is_valid(record)
+
+
+# Proposal schemas (ADR-0020) and extraction runs (ADR-0022)
+
+PROPOSED_RELATED_TO = "urn:graphea:schema:proposal:edge:related-to"
+RUN = "urn:graphea:schema:proposal:run"
+
+BASE_PROPOSAL = {
+    "type": "related-to",
+    "from": "Example Agency",
+    "to": "Example Portal",
+    "label": "sponsors the redesign of",
+    "basis": "stated",
+    "states": ["target"],
+}
+
+PROPOSAL_CASES = [
+    ("proposed related-to edge", True, {}),
+    ("proposal with an id", False, {"id": BASE_EDGE["id"]}),
+    ("proposal with verification", False, {"verification": "unverified"}),
+    ("proposal with provenance", False, {"provenance": BASE_EDGE["provenance"]}),
+    ("proposal missing label", False, {"label": None}),
+]
+
+
+@pytest.mark.parametrize("record_valid, changes", [(v, c) for _, v, c in PROPOSAL_CASES],
+                         ids=[name for name, _, _ in PROPOSAL_CASES])
+def test_proposed_related_to_edge(validator_for, record_valid, changes):
+    proposal = {**BASE_PROPOSAL, **changes}
+    proposal = {k: v for k, v in proposal.items() if v is not None}
+    errors = list(validator_for(PROPOSED_RELATED_TO).iter_errors(proposal))
+    assert (not errors) == record_valid, errors[:1]
+
+
+def run_document(**changes):
+    run = {
+        "runKey": {
+            "inputHash": "sha256:" + "b" * 64,
+            "promptHash": "sha256:" + "c" * 64,
+            "model": "example-model",
+            "schemaVersion": "0.2.0",
+        },
+        "prompt": "Extract organizations and systems.",
+        "createdAt": T,
+        "proposals": {"nodes": [], "edges": [BASE_PROPOSAL]},
+    }
+    run.update(changes)
+    return run
+
+
+RUN_CASES = [
+    ("valid run", True, run_document()),
+    ("hash without algorithm prefix", False,
+     run_document(runKey={**run_document()["runKey"], "inputHash": "b" * 64})),
+    ("extra top-level field", False, run_document(notes="x")),
+]
+
+
+@pytest.mark.parametrize("record_valid, run", [(v, r) for _, v, r in RUN_CASES],
+                         ids=[name for name, _, _ in RUN_CASES])
+def test_extraction_run(validator_for, record_valid, run):
+    errors = list(validator_for(RUN).iter_errors(run))
+    assert (not errors) == record_valid, errors[:1]
+
+
+def field_names(schema, by_id):
+    """Property names a schema defines itself or through allOf references."""
+    names = set(schema.get("properties", {}))
+    for part in schema.get("allOf", []):
+        ref = part.get("$ref", "")
+        if ref in by_id:
+            names |= field_names(by_id[ref], by_id)
+    return names
+
+
+def proposal_schema_pairs():
+    by_id = {s["$id"]: s for s in load_schemas()}
+    return [
+        (sid, sid.replace(":proposal", ""), by_id)
+        for sid in by_id
+        if sid.startswith("urn:graphea:schema:proposal:") and sid != RUN
+    ]
+
+
+PAIRS = proposal_schema_pairs()
+
+
+@pytest.mark.parametrize("proposal_id, record_id, by_id", PAIRS,
+                         ids=[proposal_id for proposal_id, _, _ in PAIRS])
+def test_proposal_fields_exist_in_record_schema(proposal_id, record_id, by_id):
+    """Every proposal field must also exist in the record schema (ADR-0020)."""
+    assert record_id in by_id, f"no record schema for {proposal_id}"
+    missing = field_names(by_id[proposal_id], by_id) - field_names(by_id[record_id], by_id)
+    assert not missing, f"{proposal_id} has fields the record schema lacks: {missing}"
