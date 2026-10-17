@@ -38,7 +38,8 @@ Nodes and edges are JSON files named by ID, one record per file, in
 | `verification` | ✓ | ✓ | `unverified`, `verified` |
 | `states` | ✓ | ✓ | `current` (known to exist now), `target`, `past` |
 | `basis` | | ✓ | `stated`, `inferred` |
-| `provenance` | ✓ | ✓ | Sources + hashes, extraction run, timestamps |
+| `verifiedHash` | ✓ | ✓ | Hash of the content when verified ([0024](decisions/0024-verification-bound-to-content.md)) |
+| `provenance` | ✓ | ✓ | Evidence (with locators and conversion hashes), claims, curator and session, timestamps ([0023](decisions/0023-evidence-claims-and-provenance.md)) |
 | `tags` | optional | optional | Lowercase kebab-case |
 | `distinctFrom` | ✓ | | Rejected matches |
 
@@ -61,5 +62,9 @@ proposed new entity. Pipelines never create IDs.
 
 - **Extraction runs** are keyed on input hash, prompt hash, model and
   schema version; unchanged keys are skipped.
-- **Staleness:** when a raw source is superseded, records citing it are
-  published with a stale flag and listed in a report.
+- **Staleness:** when a raw source is superseded, or a newer conversion
+  of it differs from the one cited, records citing it are published with
+  a stale flag and listed in a report.
+- **Outdated verification:** when a verified record's content no longer
+  matches its `verifiedHash`, it is published as unverified with
+  `verificationOutdated` and listed in a report.

@@ -35,45 +35,73 @@
     },
     "timestamp": { "type": "string", "format": "date-time" },
     "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
-    "sourceRef": {
+    "evidenceItem": {
       "type": "object",
       "properties": {
+        "key": { "$ref": "#/$defs/slug" },
         "rawItem": { "type": "string", "minLength": 1 },
-        "hash": { "$ref": "#/$defs/sha256" }
+        "rawHash": { "$ref": "#/$defs/sha256" },
+        "convertedHash": { "$ref": "#/$defs/sha256" },
+        "locator": {
+          "type": "object",
+          "properties": {
+            "page": { "type": "integer", "minimum": 1 },
+            "section": { "type": "string", "minLength": 1 },
+            "table": { "type": "string", "minLength": 1 },
+            "quote": { "type": "string", "minLength": 1, "maxLength": 300 }
+          },
+          "minProperties": 1,
+          "additionalProperties": false
+        }
       },
-      "required": ["rawItem", "hash"],
+      "required": ["key", "rawItem", "rawHash"],
       "additionalProperties": false
+    },
+    "claims": {
+      "type": "object",
+      "propertyNames": {
+        "not": { "enum": ["id", "type", "from", "to", "provenance",
+                          "verification", "verifiedAt", "verifiedBy", "verifiedHash"] }
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "evidence": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slug" } },
+          "origin": { "$ref": "#/$defs/origin" }
+        },
+        "minProperties": 1,
+        "additionalProperties": false
+      }
     },
     "provenance": {
       "type": "object",
       "properties": {
-        "sources": {
-          "type": "array",
-          "uniqueItems": true,
-          "items": { "$ref": "#/$defs/sourceRef" }
-        },
+        "evidence": { "type": "array", "items": { "$ref": "#/$defs/evidenceItem" } },
+        "claims": { "$ref": "#/$defs/claims" },
         "extractionRun": { "type": "string", "minLength": 1, "readOnly": true },
-        "session": { "const": "directed" },
+        "curatedBy": { "type": "string", "minLength": 1 },
+        "sessionId": { "type": "string", "minLength": 1 },
         "createdAt": { "$ref": "#/$defs/timestamp", "readOnly": true },
         "updatedAt": { "$ref": "#/$defs/timestamp" }
       },
-      "required": ["sources", "session", "createdAt", "updatedAt"],
+      "required": ["evidence", "curatedBy", "sessionId", "createdAt", "updatedAt"],
       "additionalProperties": false
     },
     "trustRules": {
       "allOf": [
         {
           "if": { "properties": { "verification": { "const": "verified" } }, "required": ["verification"] },
-          "then": { "required": ["verifiedAt", "verifiedBy"] },
-          "else": { "not": { "anyOf": [{ "required": ["verifiedAt"] }, { "required": ["verifiedBy"] }] } }
+          "then": { "required": ["verifiedAt", "verifiedBy", "verifiedHash"] },
+          "else": { "not": { "anyOf": [{ "required": ["verifiedAt"] }, { "required": ["verifiedBy"] },
+                                       { "required": ["verifiedHash"] }] } }
         },
         {
           "if": { "properties": { "origin": { "enum": ["documented", "observed"] } }, "required": ["origin"] },
-          "then": { "properties": { "provenance": { "properties": { "sources": { "minItems": 1 } } } } }
+          "then": { "properties": { "provenance": { "properties": { "evidence": { "minItems": 1 } } } } }
         },
         {
           "if": { "properties": { "origin": { "const": "synthetic" } }, "required": ["origin"] },
-          "then": { "properties": { "provenance": { "properties": { "sources": { "maxItems": 0 } } } } }
+          "then": { "properties": { "provenance": { "properties": { "evidence": { "maxItems": 0 } } } } }
         }
       ]
     }

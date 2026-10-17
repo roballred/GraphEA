@@ -3,13 +3,19 @@ name = "graphea"
 version = "0.0.0"
 description = "Curated GraphRAG knowledge base for Washington State enterprise architecture"
 requires-python = ">=3.12"
+dependencies = [
+  "rfc8785>=0.1.4",
+]
 
 [dependency-groups]
+# Includes the runtime dependencies too, because CI installs only this group.
 test = [
   "pytest>=8",
   "jsonschema>=4.23",
   "rfc3339-validator>=0.1.4",
+  "rfc8785>=0.1.4",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+pythonpath = ["src"]

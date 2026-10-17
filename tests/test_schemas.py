@@ -12,7 +12,7 @@ SCHEMAS = Path(__file__).resolve().parent.parent / "schemas"
 RELATED_TO = "urn:graphea:schema:edge:related-to"
 EDGE = "urn:graphea:schema:edge"
 T = "2026-10-17T17:30:00Z"
-SOURCE = [{"rawItem": "example-raw-item", "hash": "sha256:" + "a" * 64}]
+EVIDENCE = [{"key": "e1", "rawItem": "example-raw-item", "rawHash": "sha256:" + "a" * 64}]
 
 BASE_EDGE = {
     "id": "org.example-agency--related-to--system.example-portal",
@@ -24,7 +24,13 @@ BASE_EDGE = {
     "verification": "unverified",
     "basis": "stated",
     "states": ["target"],
-    "provenance": {"sources": [], "session": "directed", "createdAt": T, "updatedAt": T},
+    "provenance": {
+        "evidence": [],
+        "curatedBy": "roballred",
+        "sessionId": "2026-10-17-test",
+        "createdAt": T,
+        "updatedAt": T,
+    },
 }
 
 
@@ -51,7 +57,7 @@ def test_schema_is_valid_2020_12(schema):
 
 def edit(**changes):
     """Copy BASE_EDGE and apply changes; a value of None deletes the key.
-    Keys like provenance__sources edit nested fields."""
+    Keys like provenance__evidence edit nested fields."""
     record = copy.deepcopy(BASE_EDGE)
     for key, value in changes.items():
         *parents, leaf = key.split("__")
@@ -65,7 +71,8 @@ def edit(**changes):
     return record
 
 
-VERIFIED = dict(verification="verified", verifiedAt=T, verifiedBy="roballred")
+VERIFIED = dict(verification="verified", verifiedAt=T, verifiedBy="roballred",
+                verifiedHash="sha256:" + "d" * 64)
 
 CASES = [
     ("baseline related-to edge", True, edit()),
@@ -80,14 +87,17 @@ CASES = [
     ("states duplicated", False, edit(states=["current", "current"])),
     ("verified with stamp", True, edit(**VERIFIED)),
     ("verified without stamp", False, edit(verification="verified")),
+    ("verified without verifiedHash", False,
+     edit(verification="verified", verifiedAt=T, verifiedBy="roballred")),
+    ("unverified with verifiedHash", False, edit(verifiedHash="sha256:" + "d" * 64)),
     ("unverified with stamp", False, edit(verifiedBy="roballred")),
-    ("documented without sources", False, edit(origin="documented")),
-    ("documented with sources", True, edit(origin="documented", provenance__sources=SOURCE)),
-    ("synthetic with sources", False, edit(provenance__sources=SOURCE)),
+    ("documented without evidence", False, edit(origin="documented")),
+    ("documented with evidence", True, edit(origin="documented", provenance__evidence=EVIDENCE)),
+    ("synthetic with evidence", False, edit(provenance__evidence=EVIDENCE)),
     ("hash without algorithm prefix", False,
-     edit(origin="documented", provenance__sources=[{"rawItem": "x", "hash": "a" * 64}])),
+     edit(origin="documented", provenance__evidence=[{"key": "e1", "rawItem": "x", "rawHash": "a" * 64}])),
     ("invalid date-time", False, edit(provenance__createdAt="yesterday")),
-    ("unattended session", False, edit(provenance__session="unattended")),
+    ("missing curatedBy", False, edit(provenance__curatedBy=None)),
     ("extra field in provenance", False, edit(provenance__note="x")),
     ("uppercase edge id", False, edit(id="Org.A--related-to--system.b")),
 ]
@@ -105,10 +115,10 @@ def test_abstract_edge_base_is_open(validator_for):
     assert validator_for(EDGE).is_valid(edit(anything=1))
 
 
-@pytest.mark.parametrize("sources", [[], SOURCE], ids=["no sources", "with sources"])
-def test_asserted_origin_sources_optional(validator_for, sources):
-    """Asserted facts may cite sources but don't have to (ADR-0019)."""
-    record = edit(origin="asserted", provenance__sources=sources)
+@pytest.mark.parametrize("evidence", [[], EVIDENCE], ids=["no evidence", "with evidence"])
+def test_asserted_origin_evidence_optional(validator_for, evidence):
+    """Asserted facts may cite evidence but don't have to (ADR-0019)."""
+    record = edit(origin="asserted", provenance__evidence=evidence)
     assert validator_for(RELATED_TO).is_valid(record)
 
 
@@ -204,3 +214,38 @@ def test_proposal_fields_exist_in_record_schema(proposal_id, record_id, by_id):
     assert record_id in by_id, f"no record schema for {proposal_id}"
     missing = field_names(by_id[proposal_id], by_id) - field_names(by_id[record_id], by_id)
     assert not missing, f"{proposal_id} has fields the record schema lacks: {missing}"
+
+
+# Evidence and claims (ADR-0023)
+
+def documented(**changes):
+    """A documented edge with one evidence item, then changes applied."""
+    return edit(**{"origin": "documented", "provenance__evidence": copy.deepcopy(EVIDENCE),
+                   **changes})
+
+
+def with_evidence_item(**fields):
+    return documented(provenance__evidence=[{**EVIDENCE[0], **fields}])
+
+
+EVIDENCE_CASES = [
+    ("evidence without convertedHash", True, documented()),
+    ("evidence with convertedHash and locator", True,
+     with_evidence_item(convertedHash="sha256:" + "e" * 64,
+                        locator={"page": 4, "quote": "The Example Portal provides"})),
+    ("locator quote over 300 characters", False, with_evidence_item(locator={"quote": "x" * 301})),
+    ("empty locator", False, with_evidence_item(locator={})),
+    ("claim naming a property with evidence", True,
+     documented(provenance__claims={"label": {"evidence": ["e1"]}})),
+    ("claim overriding origin", True,
+     documented(provenance__claims={"label": {"origin": "asserted"}})),
+    ("claim on id", False, documented(provenance__claims={"id": {"evidence": ["e1"]}})),
+    ("empty claim", False, documented(provenance__claims={"label": {}})),
+]
+
+
+@pytest.mark.parametrize("record_valid, record", [(v, r) for _, v, r in EVIDENCE_CASES],
+                         ids=[name for name, _, _ in EVIDENCE_CASES])
+def test_evidence_and_claims(validator_for, record_valid, record):
+    errors = list(validator_for(RELATED_TO).iter_errors(record))
+    assert (not errors) == record_valid, errors[:1]
