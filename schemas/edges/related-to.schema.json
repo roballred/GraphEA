@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:edge:related-to",
+  "title": "related-to: ad hoc relationship",
+  "allOf": [{ "$ref": "urn:graphea:schema:edge" }],
+  "properties": {
+    "type": { "const": "related-to" },
+    "label": { "type": "string", "minLength": 1 }
+  },
+  "required": ["label"],
+  "unevaluatedProperties": false
+}

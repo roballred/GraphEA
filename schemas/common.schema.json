@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:common",
+  "title": "GraphEA common definitions",
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "nodeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "edgeId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*--[a-z0-9]+(-[a-z0-9]+)*--[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "origin": { "enum": ["documented", "observed", "synthetic"] },
+    "verification": { "enum": ["unverified", "verified"] },
+    "states": {
+      "oneOf": [
+        { "const": ["past"] },
+        {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "enum": ["current", "target"] }
+        }
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/$defs/slug" }
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "sha256": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "sourceRef": {
+      "type": "object",
+      "properties": {
+        "rawItem": { "type": "string", "minLength": 1 },
+        "hash": { "$ref": "#/$defs/sha256" }
+      },
+      "required": ["rawItem", "hash"],
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "sources": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/sourceRef" }
+        },
+        "extractionRun": { "type": "string", "minLength": 1, "readOnly": true },
+        "session": { "const": "directed" },
+        "createdAt": { "$ref": "#/$defs/timestamp", "readOnly": true },
+        "updatedAt": { "$ref": "#/$defs/timestamp" }
+      },
+      "required": ["sources", "session", "createdAt", "updatedAt"],
+      "additionalProperties": false
+    },
+    "trustRules": {
+      "allOf": [
+        {
+          "if": { "properties": { "verification": { "const": "verified" } }, "required": ["verification"] },
+          "then": { "required": ["verifiedAt", "verifiedBy"] },
+          "else": { "not": { "anyOf": [{ "required": ["verifiedAt"] }, { "required": ["verifiedBy"] }] } }
+        },
+        {
+          "if": { "properties": { "origin": { "enum": ["documented", "observed"] } }, "required": ["origin"] },
+          "then": { "properties": { "provenance": { "properties": { "sources": { "minItems": 1 } } } } }
+        },
+        {
+          "if": { "properties": { "origin": { "const": "synthetic" } }, "required": ["origin"] },
+          "then": { "properties": { "provenance": { "properties": { "sources": { "maxItems": 0 } } } } }
+        }
+      ]
+    }
+  }
+}

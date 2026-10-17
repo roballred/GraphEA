@@ -31,7 +31,8 @@ Nodes and edges are JSON files named by ID, one record per file, in
 | Field | Nodes | Edges | Notes |
 |---|---|---|---|
 | `id` | ✓ | ✓ | Read-only. Nodes: `type.name`; edges: `from--type--to` |
-| `type`, `from`, `to` | | ✓ | Read-only |
+| `type` | ✓ | ✓ | Read-only. On nodes, matches the ID prefix |
+| `from`, `to` | | ✓ | Read-only |
 | `name`, `aliases` | ✓ | | Display name may change; aliases drive matching |
 | `origin` | ✓ | ✓ | `documented`, `observed`, `synthetic` |
 | `verification` | ✓ | ✓ | `unverified`, `verified` |
@@ -40,6 +41,9 @@ Nodes and edges are JSON files named by ID, one record per file, in
 | `provenance` | ✓ | ✓ | Sources + hashes, extraction run, timestamps |
 | `tags` | optional | optional | Lowercase kebab-case |
 | `distinctFrom` | ✓ | | Rejected matches |
+
+Every record validates against the schema for its type in `schemas/`;
+unknown fields are rejected ([0016](decisions/0016-schema-conventions.md)).
 
 Merged records become tombstones (`mergedInto`), which keep their IDs
 reserved. Narrative markdown is linked to records by ID.
