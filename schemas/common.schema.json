@@ -15,7 +15,7 @@
       "type": "string",
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*--[a-z0-9]+(-[a-z0-9]+)*--[a-z0-9]+(-[a-z0-9]+)*\\.[a-z0-9]+(-[a-z0-9]+)*$"
     },
-    "origin": { "enum": ["documented", "observed", "synthetic"] },
+    "origin": { "enum": ["documented", "observed", "asserted", "synthetic"] },
     "verification": { "enum": ["unverified", "verified"] },
     "states": {
       "oneOf": [

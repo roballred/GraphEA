@@ -31,6 +31,10 @@ they are bounded by their write boundary:
 - Write only to `data/extracted/`.
 - Never create IDs, and never write to `data/curated/`.
 - Do only the task they were given.
+- Push only branches named `auto/<task>`. CI fails any `auto/` or bot
+  pull request that changes `data/curated/` or `data/raw/`. This
+  enforces the convention; it can't tell sessions apart on the same
+  account.
 
 ## Write boundaries (all sessions)
 
@@ -56,6 +60,7 @@ they are bounded by their write boundary:
 
 - Run `python3 -m pytest` before committing. Don't commit changes
   that break tests.
+- CI runs the tests on every pull request and push to `main`.
 
 ## Decisions
 

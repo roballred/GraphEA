@@ -1,6 +1,6 @@
 # 0014. Record architecture state on every record
 
-- **Status:** Accepted
+- **Status:** Superseded by [0018](0018-current-means-known-to-exist.md)
 - **Date:** 2026-10-17
 
 ## Context

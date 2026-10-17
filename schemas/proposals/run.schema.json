@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:proposal:run",
+  "title": "Extraction run",
+  "type": "object",
+  "properties": {
+    "runKey": {
+      "type": "object",
+      "properties": {
+        "inputHash": { "$ref": "urn:graphea:schema:common#/$defs/sha256" },
+        "promptHash": { "$ref": "urn:graphea:schema:common#/$defs/sha256" },
+        "model": { "type": "string", "minLength": 1 },
+        "schemaVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      },
+      "required": ["inputHash", "promptHash", "model", "schemaVersion"],
+      "additionalProperties": false
+    },
+    "prompt": { "type": "string", "minLength": 1 },
+    "createdAt": { "$ref": "urn:graphea:schema:common#/$defs/timestamp" },
+    "proposals": {
+      "type": "object",
+      "properties": {
+        "nodes": { "type": "array", "items": { "$ref": "urn:graphea:schema:proposal:node" } },
+        "edges": { "type": "array", "items": { "$ref": "urn:graphea:schema:proposal:edge" } }
+      },
+      "required": ["nodes", "edges"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["runKey", "prompt", "createdAt", "proposals"],
+  "additionalProperties": false
+}

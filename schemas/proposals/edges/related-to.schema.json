@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:proposal:edge:related-to",
+  "title": "Proposed related-to edge",
+  "allOf": [{ "$ref": "urn:graphea:schema:proposal:edge" }],
+  "properties": {
+    "type": { "const": "related-to" },
+    "label": { "type": "string", "minLength": 1 }
+  },
+  "required": ["label"],
+  "unevaluatedProperties": false
+}

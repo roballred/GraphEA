@@ -1,6 +1,6 @@
 # 0005. JSON for structured data, markdown for narrative
 
-- **Status:** Accepted
+- **Status:** Accepted, partly superseded by [0020](0020-proposal-and-record-schemas.md)
 - **Date:** 2026-10-17
 
 ## Context
