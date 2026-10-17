@@ -12,6 +12,7 @@
     "verification": { "$ref": "urn:graphea:schema:common#/$defs/verification" },
     "verifiedAt": { "$ref": "urn:graphea:schema:common#/$defs/timestamp" },
     "verifiedBy": { "type": "string", "minLength": 1 },
+    "verifiedHash": { "$ref": "urn:graphea:schema:common#/$defs/sha256" },
     "states": { "$ref": "urn:graphea:schema:common#/$defs/states" },
     "tags": { "$ref": "urn:graphea:schema:common#/$defs/tags" },
     "distinctFrom": { "type": "array", "uniqueItems": true, "items": { "$ref": "urn:graphea:schema:common#/$defs/nodeId" } },

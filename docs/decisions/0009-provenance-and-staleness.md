@@ -1,6 +1,6 @@
 # 0009. Record provenance and detect stale records
 
-- **Status:** Accepted
+- **Status:** Superseded by [0023](0023-evidence-claims-and-provenance.md)
 - **Date:** 2026-10-17
 
 ## Context

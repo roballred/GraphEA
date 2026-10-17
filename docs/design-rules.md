@@ -31,11 +31,11 @@ beliefs behind them, see [principles](principles.md).
   rejected. Nodes carry a read-only `type` matching their ID prefix.
   ([0016](decisions/0016-schema-conventions.md))
 - Every node and edge has `origin`, `verification`, `states` and
-  `provenance`. ([0009](decisions/0009-provenance-and-staleness.md),
+  `provenance`. ([0023](decisions/0023-evidence-claims-and-provenance.md),
   [0019](decisions/0019-origin-with-asserted-facts.md),
   [0018](decisions/0018-current-means-known-to-exist.md))
 - `origin` is `documented`, `observed`, `asserted` or `synthetic`.
-  Documented and observed records cite sources; asserted records may.
+  Documented and observed records cite evidence; asserted records may.
   ([0019](decisions/0019-origin-with-asserted-facts.md))
 - `states` is a non-empty list of `current` and `target`, or `past` on
   its own. `["current"]` means known to exist now, with target state not
@@ -62,9 +62,15 @@ beliefs behind them, see [principles](principles.md).
 
 ## Provenance and change
 
-- Every curated record cites the exact raw items it is based on, with
-  their hashes. Records citing superseded sources are flagged stale.
-  ([0009](decisions/0009-provenance-and-staleness.md))
+- Every curated record cites its evidence: the exact raw item and
+  conversion, by hash, optionally with a page, section, table or quote.
+  Properties from different sources name their evidence in `claims`.
+  ([0023](decisions/0023-evidence-claims-and-provenance.md))
+- Records citing a superseded source, or an outdated conversion, are
+  flagged stale. ([0023](decisions/0023-evidence-claims-and-provenance.md))
+- A verified record stores `verifiedHash`; if its content changes, it is
+  published as unverified until re-verified.
+  ([0024](decisions/0024-verification-bound-to-content.md))
 - Extraction runs are keyed on input, prompt, model and schema, and are
   kept. Unchanged keys are not re-run.
   ([0012](decisions/0012-extraction-runs.md))

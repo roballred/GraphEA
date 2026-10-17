@@ -1,6 +1,6 @@
 # 0019. Origin and verification, with curator-asserted facts
 
-- **Status:** Accepted
+- **Status:** Accepted, partly superseded by [0024](0024-verification-bound-to-content.md)
 - **Date:** 2026-10-17
 - **Supersedes:** [0010](0010-origin-and-verification.md)
 
