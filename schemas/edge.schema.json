@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:edge",
+  "title": "Edge (abstract base for all edge types)",
+  "type": "object",
+  "properties": {
+    "id": { "$ref": "urn:graphea:schema:common#/$defs/edgeId", "readOnly": true },
+    "type": { "$ref": "urn:graphea:schema:common#/$defs/slug", "readOnly": true },
+    "from": { "$ref": "urn:graphea:schema:common#/$defs/nodeId", "readOnly": true },
+    "to": { "$ref": "urn:graphea:schema:common#/$defs/nodeId", "readOnly": true },
+    "origin": { "$ref": "urn:graphea:schema:common#/$defs/origin" },
+    "verification": { "$ref": "urn:graphea:schema:common#/$defs/verification" },
+    "verifiedAt": { "$ref": "urn:graphea:schema:common#/$defs/timestamp" },
+    "verifiedBy": { "type": "string", "minLength": 1 },
+    "basis": { "enum": ["stated", "inferred"] },
+    "states": { "$ref": "urn:graphea:schema:common#/$defs/states" },
+    "tags": { "$ref": "urn:graphea:schema:common#/$defs/tags" },
+    "provenance": { "$ref": "urn:graphea:schema:common#/$defs/provenance" }
+  },
+  "required": ["id", "type", "from", "to", "origin", "verification", "basis", "states", "provenance"],
+  "allOf": [{ "$ref": "urn:graphea:schema:common#/$defs/trustRules" }]
+}

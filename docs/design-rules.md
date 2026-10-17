@@ -22,6 +22,9 @@ beliefs behind them, see [principles](principles.md).
   build rejects changes to them. ([0005](decisions/0005-json-and-json-schema.md))
 - One record per file, named by its ID, in `nodes/` or `edges/`.
   ([0006](decisions/0006-one-file-per-record.md))
+- Every record validates against its type schema; unknown fields are
+  rejected. Nodes carry a read-only `type` matching their ID prefix.
+  ([0016](decisions/0016-schema-conventions.md))
 - Every node and edge has `origin`, `verification`, `states` and
   `provenance`. ([0009](decisions/0009-provenance-and-staleness.md),
   [0010](decisions/0010-origin-and-verification.md),

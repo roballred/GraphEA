@@ -49,6 +49,13 @@ they are bounded by their write boundary:
   GitHub.
 - Agents never approve or merge pull requests. The curator reviews and
   merges.
+- Issues get the `backlog` label only when the curator grooms them,
+  not when they are created.
+
+## Testing
+
+- Run `python3 -m pytest` before committing. Don't commit changes
+  that break tests.
 
 ## Decisions
 

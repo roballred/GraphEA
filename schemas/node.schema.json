@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:node",
+  "title": "Node (abstract base for all node types)",
+  "type": "object",
+  "properties": {
+    "id": { "$ref": "urn:graphea:schema:common#/$defs/nodeId", "readOnly": true },
+    "type": { "$ref": "urn:graphea:schema:common#/$defs/slug", "readOnly": true },
+    "name": { "type": "string", "minLength": 1 },
+    "aliases": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+    "origin": { "$ref": "urn:graphea:schema:common#/$defs/origin" },
+    "verification": { "$ref": "urn:graphea:schema:common#/$defs/verification" },
+    "verifiedAt": { "$ref": "urn:graphea:schema:common#/$defs/timestamp" },
+    "verifiedBy": { "type": "string", "minLength": 1 },
+    "states": { "$ref": "urn:graphea:schema:common#/$defs/states" },
+    "tags": { "$ref": "urn:graphea:schema:common#/$defs/tags" },
+    "distinctFrom": { "type": "array", "uniqueItems": true, "items": { "$ref": "urn:graphea:schema:common#/$defs/nodeId" } },
+    "provenance": { "$ref": "urn:graphea:schema:common#/$defs/provenance" }
+  },
+  "required": ["id", "type", "name", "origin", "verification", "states", "provenance"],
+  "allOf": [{ "$ref": "urn:graphea:schema:common#/$defs/trustRules" }]
+}

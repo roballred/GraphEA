@@ -1,0 +1,4 @@
+data/published/
+.venv/
+__pycache__/
+.pytest_cache/
