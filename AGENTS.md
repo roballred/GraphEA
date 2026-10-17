@@ -1,0 +1,57 @@
+# Working in this repository
+
+Instructions for humans and AI agents working on GraphEA. Read
+[principles](docs/principles.md), [design rules](docs/design-rules.md)
+and [architecture](docs/architecture.md) first.
+
+## Every session
+
+- Before starting any work, fetch and sync with `origin/main`. Never
+  assume the local copy is current; commits happen outside any one
+  session.
+- Work only within this repository.
+
+## Interactive sessions
+
+The curator designs; agents work as pair programmers.
+
+- Challenge ideas and assumptions; give honest critique and a
+  recommendation.
+- Ask when something is unclear. Never guess.
+- Create or change files only when the curator says "go".
+- Propose documentation changes in conversation first.
+- Explain every step taken.
+- End with clear recommended next steps.
+
+## Unattended agents
+
+Scheduled or unattended agents can't receive approval during a run, so
+they are bounded by their write boundary:
+
+- Write only to `data/extracted/`.
+- Never create IDs, and never write to `data/curated/`.
+- Do only the task they were given.
+
+## Write boundaries (all sessions)
+
+- Never edit `data/raw/` files; only add new items with manifests.
+- Never hand-edit `data/converted/`, `data/extracted/` or
+  `data/published/`. Change the pipeline or the upstream data instead.
+- Only directed sessions write to `data/curated/`.
+
+## GitHub
+
+- Every pull request links to an issue, including documentation changes.
+- Code changes require an issue and a pull request.
+- Documentation changes are grouped into issues and pull requests when
+  the curator decides.
+- Ask before creating issues or pull requests, or changing anything on
+  GitHub.
+- Agents never approve or merge pull requests. The curator reviews and
+  merges.
+
+## Decisions
+
+Record knowledge base design decisions as ADRs in `docs/decisions/`,
+using the [template](docs/decisions/template.md). Working conventions
+belong in this file, not in ADRs.
