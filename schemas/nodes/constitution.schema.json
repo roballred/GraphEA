@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:node:constitution",
+  "title": "Constitution",
+  "allOf": [{ "$ref": "urn:graphea:schema:node" }],
+  "properties": {
+    "type": { "const": "constitution" }
+  },
+  "unevaluatedProperties": false
+}

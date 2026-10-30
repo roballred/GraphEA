@@ -1,0 +1,14 @@
+{
+  "id": "wa-leg-constitution-2026-10-17",
+  "title": "Constitution of the State of Washington",
+  "url": "https://leg.wa.gov/media/o3fg0ey1/washington-state-constitution.pdf",
+  "fileName": "washington-state-constitution.pdf",
+  "sha256": "sha256:5f46f377eee219c6bbf8bae1761f97f5a6f2a196ed2a847ddc78ee322a76e8ff",
+  "bytes": 1939842,
+  "mediaType": "application/pdf",
+  "kind": "legal-text",
+  "publishedAt": "2025-12-11",
+  "retrievedAt": "2026-10-17T21:37:42Z",
+  "rights": { "terms": "Public information" },
+  "storage": "git"
+}

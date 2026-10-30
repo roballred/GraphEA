@@ -1,0 +1,35 @@
+{
+  "id": "org.wa-judicial-branch",
+  "type": "org",
+  "name": "Washington State Judicial Branch",
+  "aliases": [
+    "The Judiciary"
+  ],
+  "orgKind": "branch",
+  "origin": "documented",
+  "verification": "verified",
+  "states": [
+    "current"
+  ],
+  "provenance": {
+    "evidence": [
+      {
+        "key": "e1",
+        "rawItem": "wa-leg-constitution-2026-10-17",
+        "rawHash": "sha256:5f46f377eee219c6bbf8bae1761f97f5a6f2a196ed2a847ddc78ee322a76e8ff",
+        "locator": {
+          "page": 43,
+          "section": "Article IV, Section 1",
+          "quote": "The judicial power of the state shall be vested in a supreme court, superior courts, justices of the peace, and such inferior courts as the legislature may provide."
+        }
+      }
+    ],
+    "curatedBy": "roballred",
+    "sessionId": "2026-10-19-claude-code",
+    "createdAt": "2026-10-20T02:04:13Z",
+    "updatedAt": "2026-10-20T02:06:58Z"
+  },
+  "verifiedAt": "2026-10-20T02:06:58Z",
+  "verifiedBy": "roballred",
+  "verifiedHash": "sha256:44b0b3335d1a38821929e2a41db776a7b3448f53120da6e7134c3c86bc4942c0"
+}

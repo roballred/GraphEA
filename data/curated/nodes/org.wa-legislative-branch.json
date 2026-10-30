@@ -1,0 +1,35 @@
+{
+  "id": "org.wa-legislative-branch",
+  "type": "org",
+  "name": "Washington State Legislative Branch",
+  "aliases": [
+    "Legislative Department"
+  ],
+  "orgKind": "branch",
+  "origin": "documented",
+  "verification": "verified",
+  "states": [
+    "current"
+  ],
+  "provenance": {
+    "evidence": [
+      {
+        "key": "e1",
+        "rawItem": "wa-leg-constitution-2026-10-17",
+        "rawHash": "sha256:5f46f377eee219c6bbf8bae1761f97f5a6f2a196ed2a847ddc78ee322a76e8ff",
+        "locator": {
+          "page": 16,
+          "section": "Article II, Section 1",
+          "quote": "The legislative authority of the state of Washington shall be vested in the legislature, consisting of a senate and house of representatives"
+        }
+      }
+    ],
+    "curatedBy": "roballred",
+    "sessionId": "2026-10-19-claude-code",
+    "createdAt": "2026-10-20T02:04:13Z",
+    "updatedAt": "2026-10-20T02:06:58Z"
+  },
+  "verifiedAt": "2026-10-20T02:06:58Z",
+  "verifiedBy": "roballred",
+  "verifiedHash": "sha256:5d955c60774fa97686b26cf331605957ab3212ea9b38ed77ca17b3fb1ad6e31c"
+}

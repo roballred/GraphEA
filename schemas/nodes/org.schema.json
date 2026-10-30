@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:node:org",
+  "title": "Organization",
+  "allOf": [{ "$ref": "urn:graphea:schema:node" }],
+  "properties": {
+    "type": { "const": "org" },
+    "orgKind": { "enum": ["government", "branch", "agency", "office", "board", "commission"] },
+    "identifiers": {
+      "type": "object",
+      "properties": {
+        "ofmAgencyNumber": { "type": "string", "pattern": "^[0-9]{3}$" }
+      },
+      "additionalProperties": false
+    },
+    "website": { "type": "string", "pattern": "^https?://" }
+  },
+  "required": ["orgKind"],
+  "unevaluatedProperties": false
+}

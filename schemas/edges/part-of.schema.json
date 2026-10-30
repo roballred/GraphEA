@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:edge:part-of",
+  "title": "part-of: the source is part of the target",
+  "allOf": [{ "$ref": "urn:graphea:schema:edge" }],
+  "properties": {
+    "type": { "const": "part-of" }
+  },
+  "unevaluatedProperties": false
+}
