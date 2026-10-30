@@ -23,6 +23,10 @@ flowchart LR
 | `curated/` | Accepted nodes, edges and narrative | Directed sessions only | No |
 | `published/` | Combined output for consumers | The build | Yes |
 
+`data/inbox/` is a local scratch area for downloads before they are
+imported into `data/raw/`. It is outside the lifecycle layers and never
+committed.
+
 ## Records
 
 Nodes and edges are JSON files named by ID, one record per file, in

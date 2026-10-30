@@ -1,0 +1,33 @@
+{
+  "id": "org.wa-executive-branch--part-of--org.state-of-washington",
+  "type": "part-of",
+  "from": "org.wa-executive-branch",
+  "to": "org.state-of-washington",
+  "basis": "inferred",
+  "origin": "documented",
+  "verification": "verified",
+  "states": [
+    "current"
+  ],
+  "provenance": {
+    "evidence": [
+      {
+        "key": "e1",
+        "rawItem": "wa-leg-constitution-2026-10-17",
+        "rawHash": "sha256:5f46f377eee219c6bbf8bae1761f97f5a6f2a196ed2a847ddc78ee322a76e8ff",
+        "locator": {
+          "page": 37,
+          "section": "Article III, Section 1",
+          "quote": "The executive department shall consist of a governor, lieutenant governor, secretary of state, treasurer, auditor, attorney general, superintendent of public instruction, and a commissioner of public lands"
+        }
+      }
+    ],
+    "curatedBy": "roballred",
+    "sessionId": "2026-10-19-claude-code",
+    "createdAt": "2026-10-20T02:04:13Z",
+    "updatedAt": "2026-10-20T02:06:58Z"
+  },
+  "verifiedAt": "2026-10-20T02:06:58Z",
+  "verifiedBy": "roballred",
+  "verifiedHash": "sha256:97d8428682d1a1a16473669204160426f18cea2f67309fe1e52792b1c6ccafe8"
+}

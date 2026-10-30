@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:edge:established-by",
+  "title": "established-by: the source was established by the target",
+  "allOf": [{ "$ref": "urn:graphea:schema:edge" }],
+  "properties": {
+    "type": { "const": "established-by" }
+  },
+  "unevaluatedProperties": false
+}

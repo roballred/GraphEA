@@ -1,14 +1,12 @@
 """Validation tests for the schemas in schemas/ (ADR-0016)."""
 
 import copy
-import json
-from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator, FormatChecker
-from referencing import Registry, Resource
+from jsonschema import Draft202012Validator
 
-SCHEMAS = Path(__file__).resolve().parent.parent / "schemas"
+from graphea.schemas import load_schemas, validator_for as schema_validator
+
 RELATED_TO = "urn:graphea:schema:edge:related-to"
 EDGE = "urn:graphea:schema:edge"
 T = "2026-10-17T17:30:00Z"
@@ -34,20 +32,9 @@ BASE_EDGE = {
 }
 
 
-def load_schemas():
-    return [json.loads(p.read_text()) for p in SCHEMAS.rglob("*.schema.json")]
-
-
 @pytest.fixture(scope="module")
 def validator_for():
-    schemas = load_schemas()
-    registry = Registry().with_resources(
-        (s["$id"], Resource.from_contents(s)) for s in schemas
-    )
-    by_id = {s["$id"]: s for s in schemas}
-    return lambda schema_id: Draft202012Validator(
-        by_id[schema_id], registry=registry, format_checker=FormatChecker()
-    )
+    return schema_validator
 
 
 @pytest.mark.parametrize("schema", load_schemas(), ids=lambda s: s["$id"])

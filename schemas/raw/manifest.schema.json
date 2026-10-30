@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:graphea:schema:raw:manifest",
+  "title": "Raw item manifest",
+  "type": "object",
+  "properties": {
+    "id": { "$ref": "urn:graphea:schema:common#/$defs/slug" },
+    "title": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "pattern": "^https?://" },
+    "fileName": { "type": "string", "pattern": "^[^/]+$" },
+    "sha256": { "$ref": "urn:graphea:schema:common#/$defs/sha256" },
+    "bytes": { "type": "integer", "minimum": 0 },
+    "mediaType": { "type": "string", "pattern": "^[a-z]+/[a-z0-9.+-]+$" },
+    "kind": { "enum": ["legal-text", "official-list", "dataset", "web-page", "report", "note"] },
+    "publishedAt": { "$ref": "urn:graphea:schema:common#/$defs/partialDate" },
+    "retrievedAt": { "$ref": "urn:graphea:schema:common#/$defs/timestamp" },
+    "rights": {
+      "type": "object",
+      "properties": {
+        "terms": { "type": "string", "minLength": 1 },
+        "url": { "type": "string", "pattern": "^https?://" }
+      },
+      "required": ["terms"],
+      "additionalProperties": false
+    },
+    "storage": { "enum": ["git", "lfs", "external"] },
+    "supersedes": { "$ref": "urn:graphea:schema:common#/$defs/slug" }
+  },
+  "required": ["id", "title", "url", "fileName", "sha256", "bytes", "mediaType", "kind",
+               "retrievedAt", "rights", "storage"],
+  "additionalProperties": false
+}
