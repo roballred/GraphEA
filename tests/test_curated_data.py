@@ -1,4 +1,4 @@
-"""Checks on the real data in data/raw/ and data/curated/.
+"""Checks on the real data in data/bronze/ and data/silver/reviewed/.
 
 Part of the build checks (#28), run as tests so CI enforces them on every
 pull request.
@@ -14,8 +14,8 @@ from graphea.schemas import has_schema, validator_for
 from graphea.verification import verification_is_current
 
 DATA = Path(__file__).resolve().parent.parent / "data"
-RAW = DATA / "raw"
-CURATED = DATA / "curated"
+RAW = DATA / "bronze"
+CURATED = DATA / "silver" / "reviewed"
 GIT_SIZE_LIMIT = 10 * 1024 * 1024  # larger raw files use Git LFS
 
 MANIFESTS = sorted(RAW.glob("*/manifest.json"))

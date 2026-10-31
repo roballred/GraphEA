@@ -34,9 +34,9 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           if [[ "$HEAD_REF" == auto/* || "$AUTHOR_TYPE" == "Bot" ]]; then
-            changed=$(git diff --name-only "$BASE_SHA"...HEAD | grep -E '^data/(curated|raw)/' || true)
+            changed=$(git diff --name-only "$BASE_SHA"...HEAD | grep -E '^data/(bronze|silver/reviewed)/' || true)
             if [ -n "$changed" ]; then
-              echo "::error::Automated pull requests may not change data/curated/ or data/raw/"
+              echo "::error::Automated pull requests may not change data/silver/reviewed/ or data/bronze/"
               echo "$changed"
               exit 1
             fi

@@ -1,6 +1,7 @@
-data/published/
+data/silver/text/
 .venv/
 __pycache__/
 .pytest_cache/
 data/inbox/
 .DS_Store
+.env
