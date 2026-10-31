@@ -28,20 +28,26 @@ The curator designs; agents work as pair programmers.
 Scheduled or unattended agents can't receive approval during a run, so
 they are bounded by their write boundary:
 
-- Write only to `data/extracted/`.
-- Never create IDs, and never write to `data/curated/`.
+- Write only to `data/silver/extract/`.
+- Never create IDs, and never write to `data/silver/reviewed/`.
 - Do only the task they were given.
 - Push only branches named `auto/<task>`. CI fails any `auto/` or bot
-  pull request that changes `data/curated/` or `data/raw/`. This
+  pull request that changes `data/silver/reviewed/` or `data/bronze/`. This
   enforces the convention; it can't tell sessions apart on the same
   account.
 
 ## Write boundaries (all sessions)
 
-- Never edit `data/raw/` files; only add new items with manifests.
-- Never hand-edit `data/converted/`, `data/extracted/` or
-  `data/published/`. Change the pipeline or the upstream data instead.
-- Only directed sessions write to `data/curated/`.
+- Never edit `data/bronze/` files; only add new items with manifests.
+- Never hand-edit `data/silver/text/` or `data/silver/extract/`.
+  Change the pipeline or the upstream data instead.
+- Only directed sessions write to `data/silver/reviewed/`.
+- Never edit the Neo4j graph by hand; change silver and reload.
+- Every Neo4j query must be scoped to `:GraphEA` nodes and
+  `graphea_*` indexes; the database is shared with another
+  knowledge base (ADR-0025).
+- Neo4j credentials live in a git-ignored `.env` file, never in the
+  repository.
 
 ## GitHub
 

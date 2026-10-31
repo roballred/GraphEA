@@ -18,11 +18,11 @@ shows its source, its origin and whether it has been verified.
 
 | Path | Purpose |
 |---|---|
-| `data/raw/` | Source material as received, with manifests |
-| `data/converted/` | Sources converted to markdown |
-| `data/extracted/` | LLM-proposed entities and relationships |
-| `data/curated/` | Accepted records and human decisions |
-| `data/published/` | Built output for consumers (not committed) |
+| `data/bronze/` | Source files exactly as fetched, with manifests |
+| `data/silver/text/` | Parsed text and chunks (rebuilt, not committed) |
+| `data/silver/extract/` | Extraction runs: proposed entities and relationships |
+| `data/silver/reviewed/` | Reviewed records: accepted nodes and edges |
+| Neo4j (gold) | The knowledge graph built from silver (not in the repo) |
 | `schemas/` | JSON Schemas for every record type |
 | `docs/` | Principles, rules, architecture and decisions |
 
@@ -36,5 +36,5 @@ shows its source, its origin and whether it has been verified.
 
 ## License
 
-[MIT](LICENSE). Source documents in `data/raw/` remain under their
+[MIT](LICENSE). Source documents in `data/bronze/` remain under their
 original terms, recorded in each item's manifest.

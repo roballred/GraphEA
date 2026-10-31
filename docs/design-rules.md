@@ -6,13 +6,18 @@ beliefs behind them, see [principles](principles.md).
 
 ## Layers and ownership
 
-- Data moves one way: raw → converted → extracted → curated → published.
-  No layer writes upstream. ([0003](decisions/0003-lifecycle-layers.md))
+- Data moves one way: bronze → silver (text → extract → reviewed) →
+  gold (Neo4j). No layer writes upstream.
+  ([0025](decisions/0025-medallion-pipeline-neo4j.md), Proposed)
 - Each layer has exactly one kind of writer. Unattended work writes only
-  to `data/extracted/`; only directed sessions write to `data/curated/`.
+  to `data/silver/extract/`; only directed sessions write to
+  `data/silver/reviewed/`.
   ([0004](decisions/0004-single-owner-files.md))
-- `data/published/` is never committed; everything that can't be
-  regenerated is. ([0015](decisions/0015-committed-data.md))
+- Parsed text and the Neo4j graph are never committed; everything that
+  can't be regenerated is. ([0015](decisions/0015-committed-data.md),
+  [0025](decisions/0025-medallion-pipeline-neo4j.md))
+- Every Neo4j query is scoped to `:GraphEA` nodes.
+  ([0025](decisions/0025-medallion-pipeline-neo4j.md))
 
 ## Records
 
@@ -25,7 +30,7 @@ beliefs behind them, see [principles](principles.md).
   ([0020](decisions/0020-proposal-and-record-schemas.md))
 - One curated record per file, named by its ID, in `nodes/` or `edges/`.
   ([0006](decisions/0006-one-file-per-record.md)) One extraction run per
-  file in `data/extracted/runs/`.
+  file in `data/silver/extract/runs/`.
   ([0022](decisions/0022-one-file-per-extraction-run.md))
 - Every record validates against its type schema; unknown fields are
   rejected. Nodes carry a read-only `type` matching their ID prefix.

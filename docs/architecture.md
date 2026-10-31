@@ -5,26 +5,29 @@ How GraphEA's pieces fit together. For why each choice was made, see
 
 ## Data flow
 
+The medallion layout is Proposed in
+[ADR-0025](decisions/0025-medallion-pipeline-neo4j.md).
+
 ```mermaid
 flowchart LR
-  raw[data/raw] -->|convert| converted[data/converted]
-  converted -->|extract| extracted[data/extracted]
-  extracted -->|curate| curated[data/curated]
-  converted --> build((build))
-  curated --> build
-  build --> published[data/published]
+  bronze[data/bronze] -->|parse| text[data/silver/text]
+  text -->|extract| extract[data/silver/extract]
+  extract -->|review| reviewed[data/silver/reviewed]
+  text --> load((load))
+  reviewed --> load
+  load --> gold[(Neo4j: gold)]
 ```
 
-| Layer | Holds | Written by | Rebuildable |
+| Layer | Holds | Written by | In git |
 |---|---|---|---|
-| `raw/` | Sources + manifests, add-only | Curator | No |
-| `converted/` | Markdown from sources | Conversion pipelines | Yes |
-| `extracted/` | Proposed entities, edges and matches, one file per run | Extraction (unattended or in a session) | Re-runnable; runs are kept |
-| `curated/` | Accepted nodes, edges and narrative | Directed sessions only | No |
-| `published/` | Combined output for consumers | The build | Yes |
+| `bronze/` | Source files + manifests, add-only | Curator | Yes (up to 10 MB; Git LFS above) |
+| `silver/text/` | Parsed text and chunks | Parsing pipelines | No; rebuilt deterministically |
+| `silver/extract/` | Proposed entities, edges and matches, one file per run | Extraction (unattended or in a session) | Yes; runs can't be reproduced exactly |
+| `silver/reviewed/` | Accepted nodes and edges | Directed sessions only | Yes |
+| Gold (Neo4j) | The graph, every node labelled `:GraphEA` | `load` | No; rebuilt from silver |
 
 `data/inbox/` is a local scratch area for downloads before they are
-imported into `data/raw/`. It is outside the lifecycle layers and never
+imported into `data/bronze/`. It is outside the lifecycle layers and never
 committed.
 
 ## Records
